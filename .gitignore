@@ -1,2 +1,4 @@
 *.DS_Store
 *.out
+/assignment1/server
+/assignment1/client

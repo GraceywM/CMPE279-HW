@@ -17,6 +17,9 @@ int main(int argc, char const *argv[])
     char buffer[1024] = {0};
     char *hello = "Hello from server";
 
+    // Show ASLR
+    printf("execve=0x%p\n", execve);
+    
     // Creating socket file descriptor
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
     {
@@ -24,8 +27,8 @@ int main(int argc, char const *argv[])
         exit(EXIT_FAILURE);
     }
 
-    //if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT,
-	if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, 
+    // Attaching socket to port 80
+	if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR,
     &opt, sizeof(opt)))
     {
         perror("setsockopt");
@@ -35,6 +38,7 @@ int main(int argc, char const *argv[])
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons( PORT );
 
+    // Forcefully attaching socket to the port 80
     if (bind(server_fd, (struct sockaddr *)&address,
 	sizeof(address)) < 0)
     {
